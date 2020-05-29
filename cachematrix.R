@@ -5,20 +5,23 @@
 
 makeCacheMatrix <- function(x = matrix()) { 
   
-  inverse <- NULL # zero out matrix inverse
+  inv <- NULL # zero out matrix inverse
   #Create the set function for the special vector
   set <- function(y) {
     x <<- y #push matrix y into x in the global enviroment
-    inverse <<- NULL #reset the global inverse object
+    inv <<- NULL #reset the global inverse object
   }
   #Create the get function
   get <- function() x
   #Create the set_inverse function
-  setInverse <- function(solve) inverse <<- solve
+  setInverse <- function(inverse) inv <<- inverse
   #create the get function
-  getInverse <- function() inverse
+  getInverse <- function() inv
   #create the vector made of function calls
-  list(set = set, get = get, setInverse = setInverse, getInverse = getInverse)
+  list(set = set, 
+       get = get, 
+       setInverse = setInverse, 
+       getInverse = getInverse)
 
 }
 
@@ -29,19 +32,15 @@ makeCacheMatrix <- function(x = matrix()) {
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
   inverse <- x$getInverse()
-  if(!is.null(inverse)) {
+  
+  if(!is.null(inv)) {
     message("getting cached data")
-    return(inverse)
+    return(inv)
   }
+  
   data <- x$get()
-  inverse <- solve(data, ...)
-  x$setInverse(inverse)
-  inverse
+  inv <- solve(data, ...)
+  x$setInverse(inv)
+  inv
   }
-cacheSolve(c(1,2,3,4))
-
-
-
-
-
 
